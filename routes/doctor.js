@@ -80,8 +80,9 @@ router.route("/info").get(getAllDataOfDoctors)
 
 router.route("/signup").post(createAcc)
 
-router.post("/upload-image",upload.single("image-file"),async(req,res)=>{
+router.post("/upload-image",upload.single("image"),async(req,res)=>{
     // console.log(req.body.id)
+    console.log("hi")
     console.log(req.file)
     const filename = req.file.filename
     try{
