@@ -28,6 +28,12 @@ const createAcc = async(req,res)=>{
     console.log(req.body)
     const data = req.body["signupData"]
     try{
+        const count = await info2.find({email:data.email}).countDocuments();
+        if(count !== 0){
+            return res.status(411).json({
+                message:"already available"
+            })
+        }
         const pass = await hashPassword(data.password);
         const message = await info2.create({...data,password:pass});
         console.log(message)
