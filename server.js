@@ -12,7 +12,7 @@ const cors = require('cors')
 const app = express()
 
 app.use(cors({
-    origin: ['http://localhost:3000',',https://patient-website999.netlify.app'], 
+    origin: ['http://localhost:3000','http://localhost:3001',',https://patient-website999.netlify.app'], 
     credentials: true // Allow credentials
 }));
 
