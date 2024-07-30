@@ -99,23 +99,12 @@ router.route("/logout").get((req,res)=>{
 
 router.route("/feedback").post(async (req, res) => {
     const { email, feedback } = req.body;
-    console.log(feedback)
     try {
-        const data = await pat_records.findOne({email});
-        console.log(data)
-        console.log(data._id)
-        const obj = await pat_records.updateOne({email});
-        const index = Object.keys(obj)?.findIndex((key)=>key !== "feedback")
-        if(index === -1){
-            console.log("if")
-            await pat_records.updateOne({email},{$set:{feedback:[{...feedback,rating:Number(feedback.rating)}]}})
-        }else{
-            console.log("else")
-            await pat_records.updateOne({email},{$push:{feedback:{...feedback,rating:Number(feedback.rating)}}})
-        }
-        res.status(200).json({ message: "Feedback added successfully!" });
+        const insertData = {...feedback,rating:Number(feedback.rating)}
+        await pat_records.updateOne({email:email},{$push:{feedback:{...insertData}}})
+        return res.status(200).json({ message: "Feedback added successfully!" });
     } catch (error) {
-        res.status(500).json({ message: "Error updating feedback: " + error });
+        return res.status(500).json({ message: "Error updating feedback: " + error });
     }
 });
 
