@@ -37,7 +37,7 @@ const createAcc = async(req,res)=>{
         const pass = await hashPassword(data.password);
         const message = await info2.create({...data,password:pass});
         console.log(message)
-        return res.json({info:"account created successfully",message})
+        return res.json({info:"account created successfully"})
     }catch{
         return res.status(500).json({
             message:"error while insertion"
