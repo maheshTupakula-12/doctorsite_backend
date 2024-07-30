@@ -49,7 +49,6 @@ const loginAcc = async (req, res) => {
 
         const result = await bcrypt.compare(password, user.password);
         console.log(result);
-
         if (result) {
             let token = jwt.sign({ email }, "qwerty");
             console.log(token);
@@ -106,9 +105,12 @@ router.route("/feedback").post(async (req, res) => {
         console.log(data)
         console.log(data._id)
         const obj = await pat_records.updateOne({email});
-        if(obj?.feedback?.length === 0){
+        const index = Object.keys(obj)?.findIndex((key)=>key !== "feedback")
+        if(index === -1){
+            console.log("if")
             await pat_records.updateOne({email},{$set:{feedback:[{...feedback,rating:Number(feedback.rating)}]}})
         }else{
+            console.log("else")
             await pat_records.updateOne({email},{$push:{feedback:{...feedback,rating:Number(feedback.rating)}}})
         }
         res.status(200).json({ message: "Feedback added successfully!" });
