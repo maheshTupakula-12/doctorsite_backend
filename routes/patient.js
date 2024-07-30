@@ -83,7 +83,7 @@ router.route("/signup").post(async(req,res)=>{
         return res.json(data)
     }catch(err){
         console.log(err)
-        return res.status(500).end({
+        return res.status(500).json({
             message:"error occured while creating account"
         });
     }
