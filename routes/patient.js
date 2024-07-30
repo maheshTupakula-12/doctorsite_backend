@@ -93,7 +93,7 @@ router.route("/logout").get((req,res)=>{
     console.log(req.cookies)
     res.clearCookie('token')
     return res.json({
-        message:"successfully logged out"
+        message:"Logged out successfully"
     })
 })
 
