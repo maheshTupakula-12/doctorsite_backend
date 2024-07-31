@@ -82,43 +82,23 @@ router.route("/info").get(getAllDataOfDoctors)
 
 router.route("/signup").post(createAcc)
 
-// router.post("/upload-image",upload.single("image"),async(req,res)=>{
-//     // console.log(req.body.id)
-//     console.log("hi")
-//     console.log(req.file)
-//     const filename = req.file.filename
-//     try{
-//         await info2.updateOne({id:req.body.id},{$set:{image_of_doctor:filename}});
-//         return res.json({
-//             message:"image uploaded successfully"
-//         })
-//     }catch(err){
-//         return res.json({
-//             message:'unable to upload the image'
-//         })
-//     }
-// })
 
-router.post("/upload-image",upload.single("image"),async(req,res)=>{
-    console.log(req.body.id)
-    console.log("hi")
-    console.log(req.file.path)
-    const filename = req.file.filename;
-    cloudinary.uploader.upload(req.file.path,(err,data)=>{
-        if(err){
+    router.post("/upload-image",upload.single("image"),async(req,res)=>{
+        console.log(req.body.id)
+        console.log("hi")
+        console.log(req.file.path)
+        // const filename = req.file.filename;
+        try{
+            const data = await cloudinary.uploader.upload(req.file.path,{folder:'myimages'});
+            await info2.updateOne({id:req.body.id},{$set:{image_of_doctor:data.url}});
+            return res.json({data,status:"success"})
+        }catch(err){
             return res.status(500).json({
-                message:'error occured',
+                message:err.message,
                 status:"failure"
             })
         }
-        info2.updateOne({id:req.body.id},{$set:{image_of_doctor:data.url}}).then(()=>{
-            res.json({data,status:"success"})
-        }).catch((err)=>res.status(500).json({
-            message:err.message,
-            status:"failure"
-        }))
     })
-})
 
 
 router.route("/render").get((req,res)=>{

@@ -48,6 +48,9 @@ const doctorInfoSchema = new mongoose.Schema({
     experience: {
         type: Number,
         required: true,
+    },description:{
+        type:String,
+        required:true,
     }
 }, { timestamps: true }); // Adding timestamps if needed
 
