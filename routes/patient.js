@@ -31,8 +31,6 @@ const hashPassword = async (myPlaintextPassword) => {
 };
 
 const loginAcc = async (req, res) => {
-    console.log("hi")
-    console.log(req.body);
     const { email, password } = req.body || {}; // Ensure req.body.data is defined
 
     if (!email || !password) {
@@ -41,14 +39,11 @@ const loginAcc = async (req, res) => {
 
     try {
         const user = await pat_records.findOne({ email });
-        console.log(user);
-
         if (!user) {
             return res.status(404).end("User not found");
         }
 
         const result = await bcrypt.compare(password, user.password);
-        console.log(result);
         if (result) {
             let token = jwt.sign({ email }, "qwerty");
             console.log(token);
@@ -57,10 +52,7 @@ const loginAcc = async (req, res) => {
         } else {
             res.status(401).end("Invalid Password");
         }
-
-        console.log(result ? "login successful" : "invalid password");
     } catch (err) {
-        console.error(err);
         res.status(500).end("Error occurred");
     }
 };
@@ -78,18 +70,16 @@ router.route("/signup").post(async(req,res)=>{
         }
         const pass = await hashPassword(password);
         const data = await pat_records.create({email,password:pass});
-        console.log(data)
         return res.json(data)
     }catch(err){
-        console.log(err)
         return res.status(500).json({
-            message:"error occured while creating account"
+            message:"error occured while creating account",
+            msg:err.message
         });
     }
 })
 
 router.route("/logout").get((req,res)=>{
-    console.log(req.cookies)
     res.clearCookie('token')
     return res.json({
         message:"Logged out successfully"
@@ -114,7 +104,6 @@ router.route("/uploadfile").get((req,res)=>{
 })
 
 router.route("/api/uploadfile").post(upload.single("profile"),(req,res)=>{
-    console.log(req.file)
     res.json(req.file)
 })
 

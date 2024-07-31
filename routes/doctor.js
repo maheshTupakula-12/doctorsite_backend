@@ -65,11 +65,6 @@ function isOneHourGap(time1, time2) {
     return differenceInMilliseconds >= oneHourInMilliseconds;
 }
 
-// const time1 = "11:05";
-// const time2 = "12:05";
-
-// console.log(isOneHourGap(time1, time2)); // Output: true
-
 
 const { getAllDataOfDoctors, deleteDoc } = require('../handlers/doctor')
 
@@ -84,9 +79,6 @@ router.route("/signup").post(createAcc)
 
 
     router.post("/upload-image",upload.single("image"),async(req,res)=>{
-        console.log(req.body.id)
-        console.log("hi")
-        console.log(req.file.path)
         // const filename = req.file.filename;
         try{
             const data = await cloudinary.uploader.upload(req.file.path,{folder:'myimages'});
@@ -129,11 +121,8 @@ router.route("/add/:organ").post(async (req, res) => {
 
 router.route("/appointment").post(async (req, res) => {
     const { name, id, addToSlot, date, suffering_with, particular_disease, description } = req.body;
-    // console.log(name, id, addToSlot, date, suffering_with, particular_disease, description)
-    console.log(addToSlot)
     try {
         const {fromTime,toTime} = await info2.findOne({id})
-        console.log(fromTime,toTime)
         if(!isTimeInRange(addToSlot,fromTime,toTime)){
             return res.json({
                 message: "slot booking failed",
@@ -143,20 +132,16 @@ router.route("/appointment").post(async (req, res) => {
         }
         const value = await info3.countDocuments({ id, date })
         if(value === 0){
-            console.log("value 0")
             const data = await info3.create({
                 name, id, slot: addToSlot, date, suffering_with, particular_disease, description
             })
-            // console.log(data)
             return res.json({
                 message: "slot booking successfully",
                 status:"success"
             })
         }
         if (value < 2) {
-            console.log("value<2")
             const docs = await info3.find({ id, date });
-            console.log(docs)
             for (let j = 0; j < docs.length; j++) {
                 if (!isOneHourGap(addToSlot, docs[j].slot)) {
                     const data = await info3.create({

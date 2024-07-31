@@ -24,8 +24,6 @@ const hashPassword = async (myPlaintextPassword) => {
 
 
 const createAcc = async(req,res)=>{
-    console.log("create function called")
-    console.log(req.body)
     const data = req.body["signupData"]
     try{
         const count = await info2.countDocuments({email:data.email});
@@ -36,27 +34,17 @@ const createAcc = async(req,res)=>{
         }
         const pass = await hashPassword(data.password);
         const description = await generateDoctorDescription(data)
-        console.log("description",description)
         const message = await info2.create({...data,password:pass,description});
-        console.log("message",message)
         return res.json({info:"account created successfully"})
-    }catch{
+    }catch(err){
         return res.status(500).json({
-            message:"error while insertion"
+            message:"error while insertion",
+            msg:err.message
         })
     }
 }
 
-const uploadImage = async(req,res)=>{
-    console.log(req.file)
-    res.end({
-        msg:"hello"
-    })
-   
-}
-
 const loginAcc = async (req, res) => {
-    console.log(req.body);
     const { email, password } = req.body.data || {}; // Ensure req.body.data is defined
 
     if (!email || !password) {
@@ -65,14 +53,11 @@ const loginAcc = async (req, res) => {
 
     try {
         const user = await info2.findOne({ email });
-        console.log(user);
-
         if (!user) {
             return res.status(404).end("User not found");
         }
 
         const result = await bcrypt.compare(password, user.password);
-        console.log(result);
 
         if (result) {
             let token = jwt.sign({ email }, "qwerty");
@@ -84,10 +69,7 @@ const loginAcc = async (req, res) => {
         } else {
             res.status(401).end("Invalid Password");
         }
-
-        console.log(result ? "login successful" : "invalid password");
     } catch (err) {
-        console.error(err);
         res.status(500).end("Error occurred");
     }
 };
