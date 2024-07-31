@@ -6,7 +6,7 @@
 </head>
 <body>
     <form action="/doc/upload-image" method="post" enctype="multipart/form-data">
-        <input name="image" type="file" />
+        <input name="image" accept="image/*" type="file" />
         <input name="firstname" type="text" />
         <input type="submit" />
     </form>
