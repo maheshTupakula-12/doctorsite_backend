@@ -68,7 +68,7 @@ function isOneHourGap(time1, time2) {
 
 const { getAllDataOfDoctors, deleteDoc } = require('../handlers/doctor')
 
-const { loginAcc, createAcc, uploadImage } = require('../handlers/docsignin')
+const { loginAcc, createAcc } = require('../handlers/docsignin')
 
 
 router.route("/del").post(deleteDoc)

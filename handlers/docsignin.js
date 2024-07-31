@@ -75,4 +75,4 @@ const loginAcc = async (req, res) => {
 };
 
 
-module.exports = {loginAcc,createAcc,uploadImage}
+module.exports = {loginAcc,createAcc}
