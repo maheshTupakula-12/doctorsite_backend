@@ -19,6 +19,10 @@ const patientSignInSchema = new Schema({
             type: String,
             required: true
         },
+        mail:{
+          type:String,
+          required:true
+        },
         opinion: {
           type: String,
           required: true

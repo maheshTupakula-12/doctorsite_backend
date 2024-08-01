@@ -88,7 +88,8 @@ const loginAcc = async (req, res) => {
             console.log(token);
             res.cookie("token", token); // Secure cookie
             res.status(200).json({
-                id:user.id
+                id:user.id,
+                name:user.name
             });
         } else {
             res.status(401).end("Invalid Password");

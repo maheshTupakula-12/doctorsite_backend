@@ -107,4 +107,11 @@ router.route("/api/uploadfile").post(upload.single("profile"),(req,res)=>{
     res.json(req.file)
 })
 
+router.route("/records").get(async(req,res)=>{
+    const data = await pat_records.find({})
+    res.json({
+        data
+    })
+})
+
 module.exports = router;
