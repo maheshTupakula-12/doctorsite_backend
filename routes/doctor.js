@@ -2,6 +2,7 @@ const router = require('express').Router()
 
 const serviceCollection = require("../models/services/services")
 const info2 = require('../models/doctors/doctors_info')
+const info3 = require("../models/doctors/slots")
 const path = require('path')
 
 const cloudinary = require('../cloudinary')
