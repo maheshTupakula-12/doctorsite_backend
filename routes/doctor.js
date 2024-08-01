@@ -131,6 +131,7 @@ router.route("/appointment").post(async (req, res) => {
             })
         }
         const value = await info3.countDocuments({ id, date })
+        console.log("value",value)
         if(value === 0){
             const data = await info3.create({
                 name, id, slot: addToSlot, date, suffering_with, particular_disease, description
@@ -144,30 +145,30 @@ router.route("/appointment").post(async (req, res) => {
             const docs = await info3.find({ id, date });
             for (let j = 0; j < docs.length; j++) {
                 if (!isOneHourGap(addToSlot, docs[j].slot)) {
-                    const data = await info3.create({
-                        name, id, slot: addToSlot, date, suffering_with, particular_disease, description
-                    })
-                    return res.json({
+                    return res.status(500).json({
                         message: "slot booking failed",
                         additional:"already slot reserved",
                         status:"failure"
                     })
                 }
             }
+            const data = await info3.create({
+                name, id, slot: addToSlot, date, suffering_with, particular_disease, description
+            })
             return res.json({
                 message: "slot booking successfully",
                 status:"success"
             })
         } else {
-            return res.json({
+            return res.status(500).json({
                 message: "slot booking failed",
                 additional:"max bookings reached",
                 status:"failure"
             })
         }
     } catch (err) {
-        res.json({
-            err: err
+        res.status(500).json({
+            err: err.message
         })
     }
 })

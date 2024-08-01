@@ -41,12 +41,17 @@ const createAcc = async(req,res)=>{
         console.log(services)
         const idx = services.findIndex((service)=>service.organ === data.expertise)
         if(idx === -1){
-            const serviceData = await generateListOfServices(data.expertise);
-            console.log("data",serviceData)
+            const dataOfServices = await generateListOfServices(data.expertise);
+            const serviceData = dataOfServices.data.map((service)=>{
+                if(service.substring(service.length-1) === ":"){
+                    return service.substring(0,service.length-1);
+                }
+                return service;
+            })
             await serviceCollection.create({
                 data: {
                     organ:data.expertise,
-                    diseases:serviceData["data"]
+                    diseases:serviceData
                 }
             })
         }
