@@ -2,7 +2,6 @@ const router = require('express').Router()
 
 const serviceCollection = require("../models/services/services")
 const info2 = require('../models/doctors/doctors_info')
-const info3 = require("../models/doctors/slots")
 const path = require('path')
 
 const cloudinary = require('../cloudinary')
@@ -177,5 +176,31 @@ router.route('/logout').get((req, res) => {
     res.clearCookie('token', { path: '/' }); // Specify the cookie name and path if needed
     res.status(200).json({ message: 'Logged out successfully' });
 });
+
+
+function isSameDay(dateString) {
+    // Parse the input date string into a Date object
+    const inputDate = new Date(dateString);
+  
+    // Get the current date
+    const currentDate = new Date();
+  
+    // Compare the year, month, and day components
+    return (
+      inputDate.getUTCFullYear() === currentDate.getUTCFullYear() &&
+      inputDate.getUTCMonth() === currentDate.getUTCMonth() &&
+      inputDate.getUTCDate() === currentDate.getUTCDate()
+    );
+  }
+
+router.route("/slots").get(async(req,res)=>{
+
+    const data = await info3.find({})
+    const slots = data?.filter((obj)=>isSameDay(obj.date))
+    console.log(data)
+    return res.json({
+        data:slots
+    })
+})
 
 module.exports = router;

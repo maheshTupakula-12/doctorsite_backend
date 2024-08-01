@@ -1,4 +1,8 @@
 const info2 = require('../models/doctors/doctors_info')
+const info3 = require("../models/services/services")
+const {generateListOfServices} = require("../handlers/generateDescription")
+const serviceCollection = require("../models/services/services")
+
 const bcrypt = require('bcrypt')
 
 const {generateDoctorDescription} = require("./generateDescription")
@@ -32,9 +36,24 @@ const createAcc = async(req,res)=>{
                 message:"already available"
             })
         }
+
+        const services = await serviceCollection.find({});
+        console.log(services)
+        const idx = services.findIndex((service)=>service.organ === data.expertise)
+        if(idx === -1){
+            const serviceData = await generateListOfServices(data.expertise);
+            console.log("data",serviceData)
+            await serviceCollection.create({
+                data: {
+                    organ:data.expertise,
+                    diseases:serviceData["data"]
+                }
+            })
+        }
         const pass = await hashPassword(data.password);
         const description = await generateDoctorDescription(data)
         const message = await info2.create({...data,password:pass,description});
+        
         return res.json({info:"account created successfully"})
     }catch(err){
         return res.status(500).json({
